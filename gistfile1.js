@@ -1,52 +1,34 @@
-module['exports'] = function highFive(hook) {
+var request = require("request");
 
-  // hook.io has a range of node modules available - see
-  // https://hook.io/modules.
-  // We use request (https://www.npmjs.com/package/request) for an easy way to
-  // make the HTTP request.
-  var request = require('request');
+// The Cities IDs can be found on openweathermap.org (make a search, and look the URI)
+var cities = [2988507, 5391959];
+var slackBotUri = ""; // TODO: Complete
 
-  // The parameters passed in via the slash command POST request.
-  var params = hook.params;
+request("http://api.openweathermap.org/data/2.5/group?id="+cities.join(',')+"&units=metric ", function(error, response, body) {
+  // Maybe we can handle this differently/better ?
+  if(error != null)
+  	return;
+  	
+  var text = "Hello team, here is the weather forecast for today: \n";
 
-  // Check that the hook has been triggered from our slash command by
-  // matching the token against the one in our environment variables.
-  if(params.token === hook.env.highfive_token) {
+  var weatherForecasts = JSON.parse(body);
+ 
+  for (var i = weatherForecasts.list.length - 1; i >= 0; i--) {
+  	var currentCity= weatherForecasts.list[i];
 
-    // Set up the options for the HTTP request.
-    var options = {
+  	text += "*"+currentCity.name+"*: ";
+  	text += ":" + currentCity.weather[0].icon + ": ";
+  	text += currentCity.weather[0].main + ", " + currentCity.weather[0].description + ". ";
+  	text += "Temp: " + currentCity.main.temp + "°c. "
+  	text += "\n";
+  };
 
-      // Use the Webhook URL from the Slack Incoming Webhooks integration.
-      uri: hook.env.highfive_url,
+  console.log(text);
 
-      method: 'POST',
-
-      // Slack expects a JSON payload with a "text" property.
-      json: {
-        'text': '@' + params.user_name + ' sent a high five to ' + params.text,
-        
-        // Request that Slack parse URLs, usernames, emoji, etc. in the 
-        // incoming text.
-        'parse': 'full'
-      }
-    };
-
-    // Make the POST request to the Slack incoming webhook.
-    request(options, function (error, response, body) {
-      
-      // Pass error back to client if request endpoint can't be reached.
-      if (error) {
-        hook.res.end(error.message);
-      }
-
-      // Finally, send the response. This will be displayed to the user after
-      // they submit the slash command.
-      hook.res.end('High five success! Go to #highfives to see it :smile:');
+  request.post({
+        url: slackBotUri,
+         body: text
+         }, function(error, response, body){
+            console.log(body);
     });
-
-  } else {
-
-    // If the token didn't match, send a response anyway for debugging.
-    hook.res.end('Incorrect token.');
-  }
-};
+});
