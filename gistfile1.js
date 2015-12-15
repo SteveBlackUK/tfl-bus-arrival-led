@@ -8,7 +8,7 @@ var slackBotUri = hook.env.slackweather_url; // I'm using hook.io which allows y
 var openWeatherKey = hook.env.openweatherkey;
 
 //request("http://api.openweathermap.org/data/2.5/group?id="+cities.join(',')+"&units=metric&appid="+openWeatherKey+" ", function(error, response, body) {
-request("http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid="+openWeatherKey), function(error, response, body) {
+request("http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid="+openWeatherKey+" ", function(error, response, body) {
   // Maybe we can handle this differently/better ?
   if(error != null)
   	return;
