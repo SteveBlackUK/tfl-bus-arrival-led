@@ -4,8 +4,8 @@ var request = require("request");
   
 // The Cities IDs can be found on openweathermap.org (make a search, and look the URI)
 var cities = [2988507, 5391959];
-var slackBotUri = "hook.env.slackweather_url"; // I'm using hook.io which allows you to store env variables separately to avoid exposing
-var openWeatherKey = "hook.env.openweatherkey";
+var slackBotUri = hook.env.slackweather_url; // I'm using hook.io which allows you to store env variables separately to avoid exposing
+var openWeatherKey = hook.env.openweatherkey;
 
 request("http://api.openweathermap.org/data/2.5/group?id="+cities.join(',')+"&units=metric&appid="+openWeatherKey+" ", function(error, response, body) {
   // Maybe we can handle this differently/better ?
