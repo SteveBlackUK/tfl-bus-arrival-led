@@ -1,6 +1,6 @@
 var request = require("request");
 
-if(params.token === hook.env.slackweather_token) { //Token to make sure only I can call it
+// if(params.token === hook.env.slackweather_token) { //Token to make sure only I can call it
   
 // The Cities IDs can be found on openweathermap.org (make a search, and look the URI)
 var cities = [2988507, 5391959];
@@ -34,4 +34,4 @@ request("http://api.openweathermap.org/data/2.5/group?id="+cities.join(',')+"&un
             console.log(body);
     });
 });
-};
+// };
