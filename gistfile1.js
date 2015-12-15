@@ -34,9 +34,4 @@ request("http://api.openweathermap.org/data/2.5/group?id="+cities.join(',')+"&un
             console.log(body);
     });
 });
-else {
-
-    // If the token didn't match, send a response anyway for debugging.
-    hook.res.end('Incorrect token.');
-  }
 };
